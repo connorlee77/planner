@@ -27,30 +27,32 @@ def takeoff():
 def cmd_command():
     
     cmd = geometry_msgs.msg.Twist()
-
-
-
     return cmd
     
 def closed_loop():
 
     rospy.init_node('closed_loop', anonymous=True)
+    
     listener = tf.TransformListener()
     quad_vel = rospy.Publisher('cmd_vel', geometry_msgs.msg.Twist, queue_size=1)
+    
     rate = rospy.Rate(10) # 10hz
+    
     i = 0
     while not rospy.is_shutdown():
-
+        rospy.loginfo('hello')
         try:
             (trans,rot) = listener.lookupTransform('/ground_truth/state', '/ground_truth_to_tf', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             continue
+
         rospy.loginfo(trans)
         rospy.loginfo(rot)
 
-        if i < height:
+        if i < 30:
             quad_vel.publish(takeoff())
-        quad_vel.publish(cmd_command())
+        else:
+            quad_vel.publish(cmd_command())
         rate.sleep()
         i += 1
 
