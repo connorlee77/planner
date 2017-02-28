@@ -82,9 +82,11 @@ def closed_loop():
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             continue
         
-
+        # Take off
         if i < height:
             quad_vel.publish(takeoff())
+        
+        # Follow path
         elif trans is not None and t < steps - 1:
             rospy.loginfo(t)
             true_position = np.array([trans[0], trans[1]])
@@ -93,9 +95,10 @@ def closed_loop():
             quad_vel.publish(cmd_command(true_position, final_position, kp=0.5, kd=0.01, dt=dt))
             if np.linalg.norm(error(true_position, final_position)) < 1:
                 t += 1
+        
+        # Stop moving
         else:
             cmd = geometry_msgs.msg.Twist()
-
             cmd.linear.x = 0
             cmd.linear.y = 0
             cmd.linear.z = 0
@@ -103,6 +106,7 @@ def closed_loop():
             cmd.angular.y = 0
             cmd.angular.z = 0
             quad_vel.publish(cmd)
+            
         rate.sleep()
         i += 1
 
