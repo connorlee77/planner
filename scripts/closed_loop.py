@@ -34,9 +34,8 @@ def cmd_command():
     
 def closed_loop():
 
-    listener = tf.TransformListener()
-
     rospy.init_node('closed_loop', anonymous=True)
+    listener = tf.TransformListener()
     quad_vel = rospy.Publisher('cmd_vel', geometry_msgs.msg.Twist, queue_size=1)
     rate = rospy.Rate(10) # 10hz
     i = 0
