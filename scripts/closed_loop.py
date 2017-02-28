@@ -42,10 +42,10 @@ def closed_loop():
     while not rospy.is_shutdown():
         rospy.loginfo('hello')
         try:
-            (trans,rot) = listener.lookupTransform('/ground_truth/state', '/ground_truth_to_tf', rospy.Time(0))
+            (trans,rot) = listener.lookupTransform('/world', '/base_footprint', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             continue
-
+        rospy.loginfo('not workoing')
         rospy.loginfo(trans)
         rospy.loginfo(rot)
 
