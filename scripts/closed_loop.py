@@ -12,6 +12,7 @@ from std_msgs.msg import String
 import math
 import geometry_msgs.msg
 import time 
+
 def error(true_position, final_position):
     return true_position - final_position
 
@@ -22,6 +23,7 @@ def bernoulli_spiral(a, b, t):
 
     x = a*np.exp(b*t)*np.cos(t)
     y = a*np.exp(b*t)*np.sin(t)
+
     # plt.plot(x, y)
     # plt.show()
     return x, y
@@ -76,6 +78,7 @@ def closed_loop():
     rot = None
     
     start_time = time.time()
+
     while not rospy.is_shutdown():
         
         try:
@@ -97,6 +100,7 @@ def closed_loop():
             final_position = np.array([x, y])
             
             quad_vel.publish(cmd_command(true_position, final_position, kp=0.5, kd=0.05, dt=t - pt))
+
         
         # Stop moving
         else:
